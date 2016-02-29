@@ -28,7 +28,6 @@ namespace PhotoAlbum
         private bool albumCreated = false;
 #endregion
 
-
         /// <summary>
         /// Create album with customized parameters.
         /// </summary>

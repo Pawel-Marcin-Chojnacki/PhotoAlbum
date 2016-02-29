@@ -197,7 +197,7 @@ namespace PhotoAlbum
         public bool SetTags(List<string> tags)
         {
             if (!loaded) return false;
-
+            tags = tags.Distinct().ToList();
             string data = String.Empty;
             data = String.Join(";", tags);
             using (Data)
@@ -223,6 +223,7 @@ namespace PhotoAlbum
         {
 
             if (!loaded) return false;
+            tags = tags.Distinct().ToList();
             if (tagPropertyExist)
                 Tags = Tags.Concat(tags).Distinct().ToList();
             else
