@@ -11,19 +11,23 @@ namespace PhotoAlbumTests
     [TestClass]
     public class PhotoTest
     {
-
-        [TestInitialize()]
+        [TestInitialize]
         public void CreateEmptyPhoto()
         {
-            (new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + "/Untitled.jpg", ImageFormat.Jpeg);
+            //(new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + "/Untitled.jpg", ImageFormat.Jpeg);
+            //Random rndName = new Random(1);
         }
+
 
 
         [TestMethod]
         public void OpenPhotoTest()
         {
+            Random rndName = new Random();
+            var name = "/" + rndName.Next().ToString() + ".jpg";
+            (new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + name, ImageFormat.Jpeg);
             // arrange
-            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + "/Untitled.jpg");
+            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + name);
             Photo somePhoto = new Photo();
             // act
             var openResult = somePhoto.Open(photoPath);
@@ -36,14 +40,17 @@ namespace PhotoAlbumTests
         public void CheckLocationPropertyTest()
         {
             // arrange
-            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + "/Untitled.jpg");
+            Random rndName = new Random();
+            var name = "/" + rndName.Next().ToString() + ".jpg";
+            (new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + name, ImageFormat.Jpeg);
+            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + name);
             Photo somePhoto = new Photo();
             
             // act
             var openResult = somePhoto.Open(photoPath);
             var locationResult = somePhoto.Location.AbsolutePath;
             // assert
-            Assert.AreEqual(Directory.GetCurrentDirectory() + "/Untitled.jpg", locationResult);
+            Assert.AreEqual(new Uri(Directory.GetCurrentDirectory()).AbsolutePath + name, locationResult);
         }
 
         [TestMethod]
@@ -63,7 +70,10 @@ namespace PhotoAlbumTests
         public void SetDescriptionTest()
         {
             // arrange
-            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + "/Untitled.jpg");
+            Random rndName = new Random();
+            var name = "/" + rndName.Next().ToString() + ".jpg";
+            (new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + name, ImageFormat.Jpeg);
+            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + name);
             Photo somePhoto = new Photo();
             // act
             var openResult = somePhoto.Open(photoPath);
@@ -71,13 +81,17 @@ namespace PhotoAlbumTests
 
             //assert
             Assert.AreEqual(true, setDescriptionResult);
+            somePhoto.Delete();
         }
 
         [TestMethod]
         public void SetTagsTest()
         {
             // arrange
-            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + "/Untitled.jpg");
+            Random rndName = new Random();
+            var name = "/" + rndName.Next().ToString() + ".jpg";
+            (new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + name, ImageFormat.Jpeg);
+            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + name);
             Photo somePhoto = new Photo();
             List<string> tags = new List<string>()
             {
@@ -96,7 +110,10 @@ namespace PhotoAlbumTests
         public void AddTagsTest()
         {
             //arrange
-            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + "/Untitled.jpg");
+            Random rndName = new Random();
+            var name = "/" + rndName.Next().ToString() + ".jpg";
+            (new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + name, ImageFormat.Jpeg);
+            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + name);
 
             Photo somePhoto = new Photo();
             List<string> tags = new List<string>()
@@ -114,14 +131,19 @@ namespace PhotoAlbumTests
         }
 
         [TestMethod]
-        public void TagExtistTest()
+        public void TagExistTest()
         {
             //arrange
-            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + "/Untitled.jpg");
+            Random rndName = new Random();
+            var name = "/" + rndName.Next().ToString() + ".jpg";
+            (new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + name, ImageFormat.Jpeg);
+            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + name);
             Photo somePhoto = new Photo();
 
             //act 
             var openResult = somePhoto.Open(photoPath);
+            somePhoto.AddTags(new List<string> { "tag1", "tag2","tag3" });
+
 
             // assert
             Assert.AreEqual(true, somePhoto.tagExist);
@@ -131,7 +153,10 @@ namespace PhotoAlbumTests
         public void DeleteTest()
         {
             //arrange
-            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + "/Untitled.jpg");
+            Random rndName = new Random();
+            var name = "/" + rndName.Next().ToString() + ".jpg";
+            (new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + name, ImageFormat.Jpeg);
+            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + name);
             Uri photoPathCopy = new Uri(Directory.GetCurrentDirectory() + "/" + "Untitled Copy.jpg");
             File.Copy(photoPath.AbsolutePath,photoPathCopy.AbsolutePath);
             Photo somePhoto = new Photo();
@@ -147,19 +172,27 @@ namespace PhotoAlbumTests
         [TestMethod]
         public void GetCaptureDateTest()
         {
-            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + "/Untitled.jpg");
+            Random rndName = new Random();
+            var name = "/" + rndName.Next().ToString() + ".jpg";
+            (new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + name, ImageFormat.Jpeg);
+            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + name);
             Photo somePhoto = new Photo();
 
             //act 
             var openResult = somePhoto.Open(photoPath);
-            
-            Assert.AreEqual("2016:01:17 17:14:32", somePhoto.OriginalCaptureDate);
+            DateTime captureTime = new DateTime(2016, 3, 17, 17, 14, 33);
+            somePhoto.SetCaptureDate(captureTime);
+
+            Assert.AreEqual("2016:03:17 17:14:33", somePhoto.OriginalCaptureDate);
         }
 
         [TestMethod]
         public void SetCaptureDateTest()
         {
-            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + "/Untitled.jpg");
+            Random rndName = new Random();
+            var name = "/" + rndName.Next().ToString() + ".jpg";
+            (new Bitmap(1, 1)).Save(Directory.GetCurrentDirectory() + name, ImageFormat.Jpeg);
+            Uri photoPath = new Uri(Directory.GetCurrentDirectory() + name);
             Photo somePhoto = new Photo();
             DateTime captureTime = new DateTime(2016,1,17,17,14,32);
             var openResult = somePhoto.Open(photoPath);
