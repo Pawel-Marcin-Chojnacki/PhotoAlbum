@@ -16,7 +16,7 @@ namespace PhotoAlbum
     /// <summary>
     /// Holds all necessary information about photo.
     /// </summary>
-    public class Photo : IDisposable
+    public class Photo
     {
         #region properties
         /// <summary>
@@ -58,11 +58,11 @@ namespace PhotoAlbum
         private bool creationTimePropertyExist = false;
 
         private bool descriptionPropertyExist = false;
-        
+
         /// <summary>
         /// Picture capture date in string format.
         /// </summary>
-        public string OriginalCaptureDate;
+        public string OriginalCaptureDate { get; private set; }
 
         public  bool tagExist = false;
 
@@ -126,7 +126,6 @@ namespace PhotoAlbum
             try
             {
                 Data = (Bitmap)Image.FromFile(path.AbsolutePath);
-                GetCorrectCaptureDate();
                 Name = path.LocalPath;
                 var properties = Data.PropertyItems;
                 tagPropertyExist = IsPropertySet(properties, 0x9c9e);
@@ -141,8 +140,8 @@ namespace PhotoAlbum
                     tagExist = true;
                 }
                 else Tags = new List<string>();
-                
                 loaded = true;
+                GetCorrectCaptureDate();
             }
             catch (FileNotFoundException)
             {
@@ -158,7 +157,7 @@ namespace PhotoAlbum
         /// <returns></returns>
         private bool IsPropertySet(PropertyItem[] properties, int id)
         {
-            foreach (var property in properties)
+            foreach(var property in properties)
             {
                 if (property.Id == id)
                 {
@@ -239,6 +238,7 @@ namespace PhotoAlbum
             }
 
             SaveChanges();
+            tagExist = true;
             return true;
         }
         
@@ -291,6 +291,7 @@ namespace PhotoAlbum
                     Data.RemovePropertyItem(0x9003);
                 var propItem = Data.PropertyItems.FirstOrDefault();
                 var time = captureDate.ToString("yyyy:MM:dd HH:mm:ss");
+                //OriginalCaptureDate = time;
                 var propertyValue = Encoding.ASCII.GetBytes(time);
                 Data.SetPropertyItem(SetProperty(propItem, 2, propertyValue, 0x9003));
                 Data.Save(Location.AbsolutePath + ".tmp");
@@ -311,7 +312,7 @@ namespace PhotoAlbum
             return property;
         }
 
-        public void Dispose()
+        private void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
