@@ -9,22 +9,35 @@ using System.Threading.Tasks;
 
 namespace PhotoAlbum
 {
+    /// <summary>
+    /// Represents album. It's reflection of physical directory with photos.
+    /// </summary>
     public class Album
     {
-        #region properties
-        private Uri Location { get; set; }
+#region properties
+
         /// <summary>
-        /// Album name
+        /// Physical location of an album.
         /// </summary>
-        public string Name { get; set; }
+        private Uri Location { get; set; }
+
+        /// <summary>
+        /// Album name (same as directory name).
+        /// </summary>
+        private string Name { get; set; }
+
         /// <summary>
         /// Creation date of an album in program.
         /// </summary>
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate { get; }
+
         /// <summary>
         /// All photos managed by album.
         /// </summary>
-        public List<Photo> Photos;
+        private List<Photo> Photos;
+
+        public readonly Tag _tags = new Tag();
+
         private bool albumCreated = false;
 #endregion
 
@@ -73,6 +86,22 @@ namespace PhotoAlbum
             }
         }
 
+        public void ChangeName(string newName)
+        {
+            //foreach (var photo in Photos)
+            //{
+            //    photo.Data.Dispose();
+            //}
+           Directory.Move(Location.AbsolutePath, GetParentUriString(Location) + "/" + newName);
+            //foreach (var photo in Photos)
+            //    photo.Data = photo.
+        }
+
+        private string GetParentUriString(Uri uri)
+        {
+            return uri.AbsoluteUri.Remove(uri.AbsoluteUri.Length - uri.Segments.Last().Length);
+        }
+
         /// <summary>
         /// Collect all tags in photos.
         /// </summary>
@@ -82,7 +111,7 @@ namespace PhotoAlbum
             {
                 foreach (var tag in photo.Tags)
                 {
-                    Tag.Add(tag);
+                    _tags.Add(tag);
                 }
             }
         }
