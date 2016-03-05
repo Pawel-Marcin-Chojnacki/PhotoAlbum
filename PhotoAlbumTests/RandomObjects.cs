@@ -10,10 +10,18 @@ using PhotoAlbum;
 
 namespace PhotoAlbumTests
 {
+    /// <summary>
+    /// Generate random objects for testing.
+    /// </summary>
     class RandomObjects
     {
         private Random rnd = new Random();
 
+        /// <summary>
+        /// Generates list of random tags 
+        /// </summary>
+        /// <param name="numberOfTags">Amount of tags to generate.</param>
+        /// <returns></returns>
         public List<string> GenerateTags(int numberOfTags)
         {
             var list = new List<string>();
@@ -24,6 +32,11 @@ namespace PhotoAlbumTests
             return list;
         }
 
+        /// <summary>
+        /// Creates photo object as a file with random name.
+        /// </summary>
+        /// <param name="absolutePath">Directory in which photo will be created.</param>
+        /// <returns>Generated Photo object.</returns>
         public Photo CreatePhoto(string absolutePath)
         {
             var randomPhotoName = "/" + rnd.Next().ToString() + ".jpg";
@@ -33,6 +46,10 @@ namespace PhotoAlbumTests
             return photo;
         }
 
+        /// <summary>
+        /// Gets a random name (eg. for file or a directory).
+        /// </summary>
+        /// <returns>8 characters long, random string.</returns>
         public string GetRandomName()
         {
             return Path.GetRandomFileName().Replace(".", "");
